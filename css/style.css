@@ -1,1 +1,681 @@
+/* ==========================================================
+   Бочкарёв Иван Александрович — врач-реабилитолог
+   Mobile-first: базовые стили — телефон, дальше расширяем.
+   Брейкпоинт один: 700px (телефон → планшет/десктоп).
+   Размеры шрифтов плавные: clamp(мин, vw-формула, макс).
+   ========================================================== */
 
+/* ---------- Переменные ---------- */
+:root {
+  --c-text: #3a2a22;
+  --c-mint: #dcffe6;
+  --c-btn-gray: #82EC9C;
+  --radius-pill: 999px;
+  --font: 'Montserrat', Arial, sans-serif;
+
+  --pad: 18px;                       /* единый левый отступ: шапка + весь текст */
+  --header-h: 56px;                  /* высота шапки */
+  --screen: 100vh;                   /* высота одного экрана */
+
+  /* ---- ФОТО ВРАЧА + ПЛАШКИ (hero) — тут всё двигается ---- */
+  --photo-x: 0%;                     /* сдвиг фото вместе с плашками по горизонтали (% от ширины фото) */
+  --photo-y: 0%;                     /* сдвиг по вертикали (% от высоты фото) */
+  --photo-max: 680px;                /* максимальная ширина фото (860px в две колонки) */
+
+  /* положение плашек в % от фото: top — по вертикали */
+  --b-edu-top: 7%;     --b-edu-left: 6%;       /* «Высшее образование»  — уровень головы  */
+  --b-apr-top: 44%;    --b-apr-right: 1.5%;    /* «Индивидуальный подход» — уровень сердца */
+  --b-home-top: 86%;   --b-home-left: 16%;     /* «Выезд на дом»         — уровень рук     */
+}
+
+@supports (height: 100svh) {
+  :root { --screen: 100svh; }        /* учитываем адресную строку на телефонах */
+}
+
+@media (min-width: 700px) {
+  :root {
+    --pad: clamp(28px, 3.4vw, 56px);
+    --header-h: clamp(60px, 5vw, 80px);
+    --b-home-left: 18%;
+  }
+}
+
+/* ---------- Сброс ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: var(--font);
+  color: var(--c-text);
+  background: #fff;
+  line-height: 1.25;
+  overflow-x: hidden;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+ul { margin: 0; padding: 0; list-style: none; }
+h1, h2, h3, p { margin: 0; }
+button { font-family: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
+:focus-visible { outline: 2px solid var(--c-text); outline-offset: 3px; }
+
+/* ---------- Графические фоновые элементы ---------- */
+.blob {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+/* ---------- Кнопки ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.btn--white { background: #f4fff6; color: var(--c-text); }
+.btn--gray  { background: #82EC9C; color: #111; }
+
+/* ==========================================================
+   ШАПКА
+   (фон-размытие вынесен в ::before — иначе backdrop-filter
+    ломает position: fixed у мобильного меню)
+   ========================================================== */
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  height: var(--header-h);
+  padding: 0 var(--pad);
+  font-size: 12px;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(255,255,255,.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 2px 14px rgba(0,0,0,.08);
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.header.is-scrolled::before { opacity: 1; }
+
+.header__logo { position: relative; z-index: 101; font-weight: 500; white-space: nowrap; }
+
+.header__actions {
+  position: relative;
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+.header__btn { padding: 8px 14px; font-size: 11px; }
+
+.burger {
+  width: 30px; height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--c-btn-gray);
+  font-size: 12px;
+  font-weight: 600;
+}
+.burger__icon { line-height: 1; }
+
+/* мобильное меню — выезжающая панель */
+.nav {
+  position: fixed;
+  top: 0; right: 0;
+  z-index: 99;
+  width: min(75%, 300px);
+  height: 100vh;
+  height: 100dvh;
+  padding: 84px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-size: 16px;
+  background: rgba(255,255,255,.97);
+  box-shadow: -6px 0 24px rgba(0,0,0,.12);
+  transform: translateX(110%);
+  visibility: hidden;
+  transition: transform .35s ease, visibility 0s linear .35s;
+}
+.nav.is-open {
+  transform: none;
+  visibility: visible;
+  transition-delay: 0s;
+}
+.nav__link { font-weight: 500; transition: opacity .2s; }
+.nav__link:hover { opacity: .6; }
+
+/* ==========================================================
+   ГЛАВНЫЙ ЭКРАН
+   Телефон: текст сверху, под ним фото (стопкой).
+   ≥700px: текст слева, фото справа.
+   ========================================================== */
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: var(--screen);
+  padding-top: var(--header-h);
+  overflow: hidden;
+}
+
+/* фон (кабинет) — отдельное изображение от фото врача */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 12% center;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ----- текст ----- */
+.hero__content {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  max-width: 560px;
+  padding: clamp(20px, 6vw, 40px) var(--pad) 0;
+}
+.hero__profession {
+  font-size: clamp(12px, 3.4vw, 18px);
+  font-weight: 500;
+  margin-bottom: .8em;
+}
+.hero__title {
+  font-size: clamp(26px, 7.4vw, 48px);
+  line-height: 1.1;
+  font-weight: 700;
+  margin-bottom: .3em;
+}
+.hero__subtitle {
+  font-size: clamp(13px, 3.7vw, 22px);
+  font-weight: 500;
+  line-height: 1.3;
+  margin-bottom: 1.1em;
+}
+.hero__btn {
+  padding: .78em 1.5em;
+  font-size: clamp(13px, 3.7vw, 18px);
+  margin-bottom: clamp(18px, 5vw, 28px);
+}
+
+.hero__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, auto));
+  justify-content: start;
+  gap: 14px clamp(16px, 5vw, 28px);
+}
+.stat__num  { font-size: clamp(13px, 3.6vw, 20px); font-weight: 700; margin-bottom: .3em; }
+.stat__text { font-size: clamp(10px, 2.7vw, 15px); font-weight: 600; line-height: 1.2; }
+
+/* ----- фото врача + плашки (единый блок) -----
+   .hero__photo — НЕ absolute: обычный блок, который сам растёт по картинке.
+   Плашки лежат внутри него и привязаны к нему в %, а их шрифт и отступы
+   считаются в cqw (1cqw = 1% ширины фото) — поэтому всё масштабируется вместе. */
+.hero__photo {
+  position: relative;
+  container-type: inline-size;
+  width: min(100%, var(--photo-max));
+  margin: auto 0 0 auto;             /* прижато вниз и вправо */
+  translate: var(--photo-x) var(--photo-y);
+}
+.hero__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+.badge {
+  position: absolute;
+  z-index: 2;
+  padding: 5px 9px;                  /* запасные значения, если нет cqw */
+  font-size: 11px;
+  padding: 1.6cqw 3cqw;
+  font-size: 3cqw;
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
+  text-align: center;
+  color: var(--c-text);
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(255,255,255,.75);
+  border-radius: 14px;
+  border-radius: 3.4cqw;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 3px 10px rgba(0,0,0,.08);
+}
+.badge--education { top: var(--b-edu-top);  left: var(--b-edu-left); }
+.badge--approach  { top: var(--b-apr-top);  right: var(--b-apr-right); }
+.badge--home      { top: var(--b-home-top); left: var(--b-home-left); }
+
+/* ==========================================================
+   С КАКИМИ ЗАПРОСАМИ Я РАБОТАЮ
+   ========================================================== */
+.services {
+  --card-w: clamp(200px, 60vw, 300px);
+  --card-h: calc(var(--card-w) * 1.25);
+  --rot: 7deg;
+  --card-gap: clamp(24px, 6vw, 56px);
+
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: url("../img/hero-b3.png") center / cover no-repeat;
+  padding: clamp(56px, 10vw, 100px) 0 clamp(40px, 6vw, 64px);
+}
+.blob--gray-left  { top: 0;    left: -20px; width: 55%; max-width: 330px; }
+.blob--green-tube { bottom: 0; left: -20px; width: 52%; max-width: 300px; }
+
+.section-title {
+  position: relative;
+  z-index: 2;
+  padding: 0 var(--pad);
+  font-size: clamp(21px, 2.2vw + 12px, 46px);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* ----- карусель ----- */
+.slider { position: relative; z-index: 2; }
+
+.cards {
+  display: flex;
+  align-items: center;
+  gap: var(--card-gap);
+  /* боковые отступы = половина экрана минус половина карточки:
+     любая карточка может встать строго по центру */
+  padding: calc(var(--card-h) * .17 + 14px) calc(50% - var(--card-w) / 2);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.cards::-webkit-scrollbar { display: none; }
+.cards.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+}
+
+.card {
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--card-w);
+  height: var(--card-h);
+  overflow: hidden;
+  border-radius: calc(var(--card-w) * .11);
+  background: linear-gradient(135deg, #b9f3c9, #7ff28f);   /* пока нет картинки */
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  scroll-snap-align: center;
+  transform: rotate(0deg);
+  transition: transform .35s ease;
+}
+/* ритм наклонов: влево, прямо, вправо, прямо — соседние карточки не сталкиваются */
+.card:nth-child(4n + 1) { transform: rotate(calc(var(--rot) * -1)); }
+.card:nth-child(4n + 3) { transform: rotate(var(--rot)); }
+@media (hover: hover) {
+  .card:hover { scale: 1.04; }
+}
+
+.card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+.card__label {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  padding: .9em .8em;
+  font-size: clamp(10px, calc(var(--card-w) * .052), 16px);
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--c-text);
+  background: rgba(255,255,255,.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* стрелки под карточками */
+.slider__controls {
+  display: flex;
+  gap: 10px;
+  padding: 0 var(--pad);
+}
+.slider__btn {
+  width: 40px; height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--c-text);
+  background: rgba(255,255,255,.85);
+  border: 1px solid rgba(58,42,34,.15);
+  box-shadow: 0 3px 10px rgba(0,0,0,.08);
+  transition: transform .2s ease, opacity .2s ease, background .2s ease;
+}
+.slider__btn svg { width: 18px; height: 18px; }
+.slider__btn:hover:not(:disabled) { transform: translateY(-2px); background: #fff; }
+.slider__btn:disabled { opacity: .35; cursor: default; }
+
+/* ==========================================================
+   ПАТОЛОГИЯ НОВОРОЖДЁННЫХ
+   Заголовок на всю ширину, ниже: текст слева — фото справа.
+   ========================================================== */
+.about {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 42%);
+  grid-template-rows: auto auto 1fr;
+  column-gap: 12px;
+  background: url("../img/hero-bg2.jpg") center / cover no-repeat;
+  padding: clamp(56px, 9vw, 100px) var(--pad) 0;
+}
+.blob--green-glow { top: 0; right: -10%; width: 70%; max-width: 420px; opacity: .9; }
+
+.about__title,
+.about__tag,
+.about__text,
+.about__photo { position: relative; z-index: 2; }
+
+.about__title {
+  grid-column: 1 / -1;
+  font-size: clamp(21px, 2.2vw + 12px, 46px);
+  font-weight: 600;
+  line-height: 1.15;
+  margin-bottom: .15em;
+}
+.about__tag {
+  grid-column: 1 / -1;
+  font-size: clamp(13px, .7vw + 9px, 22px);
+  font-weight: 500;
+  margin-bottom: clamp(16px, 4vw, 44px);
+}
+.about__text {
+  grid-column: 1;
+  align-self: start;
+  max-width: 28em;
+  padding-bottom: clamp(24px, 5vw, 60px);
+  font-size: clamp(13px, .9vw + 10px, 24px);
+  font-weight: 500;
+  line-height: 1.35;
+}
+.about__photo {
+  grid-column: 2;
+  grid-row: 3;
+  align-self: end;
+  justify-self: end;
+  width: min(calc(100% + var(--pad)), 520px);
+  height: auto;
+  margin-right: calc(var(--pad) * -1);     /* фото упирается в правый край экрана */
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ==========================================================
+   ЧТО ВАЖНО ДЛЯ РОДИТЕЛЕЙ
+   ========================================================== */
+.parents {
+  position: relative;
+  z-index: 2;
+  background: var(--c-mint);
+  padding: clamp(40px, 8vw, 100px) var(--pad) clamp(40px, 6vw, 64px);
+}
+.parents__title {
+  font-size: clamp(19px, 1.9vw + 11px, 40px);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: clamp(14px, 3vw, 28px);
+}
+.parents__list li {
+  max-width: 30em;
+  margin-bottom: 1em;
+  font-size: clamp(13px, .9vw + 10px, 24px);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+/* ==========================================================
+   НИЖНИЙ БЛОК С ГРАФИКОЙ (КОНТАКТЫ)
+   ========================================================== */
+.contacts {
+  position: relative;
+  overflow: hidden;
+  min-height: min(var(--screen), 80vw);
+  background: #fff;
+}
+.blob--gray-bottom {
+  top: -10px; left: 50%;
+  width: 78%;
+  max-width: 440px;
+  transform: translateX(-30%);
+}
+
+/* ==========================================================
+   ≥ 700px: ПЛАНШЕТ И ДЕСКТОП
+   ========================================================== */
+@media (min-width: 700px) {
+
+  /* шапка: меню в строку, бургер скрыт */
+  .header { font-size: clamp(12px, 1.05vw, 16px); }
+  .header__btn { padding: .7em 1.6em; font-size: 1em; }
+  .burger { display: none; }
+  .nav {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin-left: clamp(20px, 4vw, 64px);
+    flex-direction: row;
+    gap: clamp(14px, 2.2vw, 36px);
+    font-size: 1em;
+    background: none;
+    box-shadow: none;
+    transform: none;
+    visibility: visible;
+  }
+
+  /* карточки */
+  .services { --rot: 12deg; }
+  .slider__btn { width: 52px; height: 52px; }
+  .slider__btn svg { width: 22px; height: 22px; }
+
+  /* блок «Патология»: на весь экран, фото справа внизу */
+  .about { grid-template-columns: minmax(0, 1fr) minmax(0, 45%); column-gap: 24px; }
+}
+
+/* ==========================================================
+   HERO в две колонки: текст слева, фото справа.
+   Только когда экран широкий И не портретный —
+   на планшете «стоя» остаётся компоновка «текст сверху, фото под ним».
+   ========================================================== */
+@media (min-width: 700px) and (min-aspect-ratio: 1/1) {
+  :root { --photo-max: 860px; }
+
+  .hero__bg { object-position: center; }
+  .hero__inner { flex-direction: row; align-items: stretch; }
+
+  .hero__content {
+    flex: 0 0 46%;
+    align-self: center;
+    max-width: none;
+    padding: clamp(24px, 4vw, 64px) 0 clamp(24px, 4vw, 64px) var(--pad);
+  }
+  .hero__profession { font-size: clamp(12px, 1.55vw, 26px); }
+  .hero__title      { font-size: clamp(28px, 4.4vw, 72px); }
+  .hero__subtitle   { font-size: clamp(12px, 1.9vw, 32px); }
+  .hero__btn        { font-size: clamp(12px, 1.6vw, 26px); margin-bottom: clamp(24px, 3.4vw, 56px); }
+  .hero__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px clamp(18px, 3vw, 56px);
+  }
+  .stat__num  { font-size: clamp(13px, 1.6vw, 26px); }
+  .stat__text { font-size: clamp(10px, 1.1vw, 18px); }
+
+  .hero__photo {
+    flex: 1 1 54%;
+    min-width: 0;
+    width: auto;
+    max-width: var(--photo-max);
+    margin: auto 0 0 auto;
+  }
+
+  /* каждый блок — на всю высоту экрана (только в ландшафте) */
+  .services { min-height: var(--screen); }
+  .about    { min-height: var(--screen); }
+  .parents  { min-height: calc(var(--screen) * .8); }
+}
+
+/* Мягкое «примагничивание» блоков — только на больших экранах */
+@media (min-width: 900px) and (min-height: 640px) {
+  html { scroll-snap-type: y proximity; }
+  .hero, .services, .about, .parents, .contacts { scroll-snap-align: start; }
+}
+
+/* ---------- Анимация появления при скролле ---------- */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.is-visible { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .cards { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .nav, .card, .btn { transition: none; }
+}
+
+/* ==========================================================
+   ОБНОВЛЁННЫЕ БЛОКИ: ПАТОЛОГИЯ, ЭТАПЫ РЕАБИЛИТАЦИИ, АУДИТОРИЯ
+   ========================================================== */
+.about {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 42%);
+  grid-template-rows: auto;
+  align-items: center;
+  gap: clamp(24px, 4vw, 64px);
+  padding-bottom: clamp(40px, 7vw, 90px);
+}
+.about__content { position: relative; z-index: 2; grid-column: 1; grid-row: 1; }
+.about__tag { grid-column: auto; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .09em; font-size: clamp(10px, .75vw + 8px, 13px); }
+.about__title { grid-column: auto; margin-bottom: clamp(16px, 2vw, 26px); }
+.about__text { grid-column: auto; max-width: 34em; padding-bottom: 0; margin-bottom: clamp(22px, 3vw, 36px); }
+.about__visual { position: relative; grid-column: 2; grid-row: 1; align-self: stretch; display: flex; align-items: flex-end; min-width: 0; }
+.about__photo { grid-column: auto; grid-row: auto; width: 100%; max-width: 520px; max-height: 650px; object-fit: contain; object-position: bottom center; margin: auto 0 0; }
+.about-badge { max-width: 70%; white-space: normal; font-size: clamp(9px, .75vw, 13px); padding: 12px 16px; border-radius: 18px; }
+.about-badge--one { top: 9%; left: -4%; }
+.about-badge--two { top: 43%; right: -2%; }
+.about-badge--three { bottom: 7%; left: 0; }
+.parents-inline { padding-top: clamp(18px, 2.4vw, 30px); border-top: 1px solid rgba(58,42,34,.18); }
+.parents-inline__title { font-size: clamp(17px, 1.5vw + 10px, 28px); font-weight: 600; margin-bottom: 14px; line-height: 1.2; }
+.parents-inline__list { display: grid; gap: 10px; }
+.parents-inline__list li { position: relative; padding-left: 22px; max-width: 38em; font-size: clamp(12px, .55vw + 10px, 16px); line-height: 1.45; }
+.parents-inline__list li::before { content: ''; position: absolute; left: 0; top: .55em; width: 8px; height: 8px; border-radius: 50%; background: #7cae8a; }
+
+.rehab { position: relative; padding: clamp(56px, 8vw, 110px) var(--pad); background: #fff; overflow: hidden; }
+.eyebrow { margin-bottom: 12px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; color: #648b70; }
+.rehab__intro { max-width: 880px; margin-bottom: clamp(32px, 5vw, 64px); }
+.rehab__title { padding: 0; margin-bottom: 20px; box-shadow: none; }
+.rehab__lead { max-width: 780px; font-size: clamp(14px, .8vw + 11px, 19px); line-height: 1.55; }
+.rehab__steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.rehab-step { padding: clamp(20px, 3vw, 34px); border-radius: 24px; background: #f2fbf4; min-height: 210px; }
+.rehab-step__num { display: block; margin-bottom: 20px; font-size: 10px; font-weight: 700; letter-spacing: .08em; color: #668d70; }
+.rehab-step h3 { max-width: 22em; margin-bottom: 12px; font-size: clamp(17px, 1.1vw + 12px, 24px); line-height: 1.25; font-weight: 600; }
+.rehab-step p { font-size: clamp(12px, .55vw + 10px, 15px); line-height: 1.5; }
+.rehab-step:last-child { grid-column: 1 / -1; }
+.rehab__principle { margin-top: clamp(26px, 4vw, 48px); padding: clamp(22px, 3vw, 34px); border-radius: 22px; background: #dcffe6; font-size: clamp(14px, .8vw + 11px, 19px); line-height: 1.5; }
+.rehab__principle strong { display: block; margin-bottom: 8px; }
+
+.situations { position: relative; overflow: hidden; padding: clamp(56px, 8vw, 110px) var(--pad); background: #dcffe6; }
+.situations__header { max-width: 850px; margin-bottom: clamp(30px, 5vw, 60px); }
+.situations__title { padding: 0; margin-bottom: 16px; box-shadow: none; }
+.situations__lead { max-width: 620px; font-size: clamp(14px, .7vw + 11px, 18px); line-height: 1.45; }
+.audience-switch { display: inline-flex; gap: 5px; margin-top: 26px; padding: 5px; border-radius: 999px; background: rgba(255,255,255,.72); border: 1px solid rgba(58,42,34,.08); }
+.audience-switch__button { min-width: 112px; padding: 13px 22px; border-radius: 999px; font-size: 14px; font-weight: 600; color: var(--c-text); transition: background .25s ease, color .25s ease, box-shadow .25s ease; }
+.audience-switch__button.is-active { background: #82EC9C; color: #fff; box-shadow: 0 4px 12px rgba(58,42,34,.12); }
+.situations__content { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(240px, .85fr); align-items: start; gap: clamp(28px, 5vw, 70px); }
+.situations__copy { min-width: 0; }
+.situations__headline { max-width: 18em; margin-bottom: 12px; font-size: clamp(23px, 2vw + 12px, 40px); line-height: 1.15; font-weight: 600; }
+.situations__description { max-width: 38em; margin-bottom: 28px; font-size: clamp(14px, .7vw + 11px, 18px); line-height: 1.5; }
+.situation-list { display: grid; gap: 0; }
+.situation-item { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; padding: 19px 0; border-top: 1px solid rgba(58,42,34,.18); }
+.situation-item > span { padding-top: 3px; font-size: 11px; font-weight: 700; color: #648b70; }
+.situation-item h4 { margin-bottom: 7px; font-size: clamp(15px, .55vw + 12px, 19px); line-height: 1.3; font-weight: 600; }
+.situation-item p { font-size: clamp(12px, .45vw + 10px, 15px); line-height: 1.5; }
+.situations__note { margin-top: 18px; max-width: 46em; font-size: 11px; line-height: 1.5; opacity: .75; }
+.situations__cta { margin-top: 22px; padding: 15px 24px; font-size: 13px; }
+.situations__photo-wrap { position: sticky; top: calc(var(--header-h) + 24px); align-self: start; min-width: 0; }
+.situations__photo { width: 100%; max-height: 680px; object-fit: cover; object-position: center top; border-radius: 48% 48% 28px 28px; }
+.situations-badge { font-size: clamp(10px, .65vw, 13px); padding: 12px 15px; white-space: normal; }
+.situations-badge--top { top: 16%; left: -7%; }
+.situations-badge--bottom { bottom: 12%; right: -5%; }
+
+@media (max-width: 699px) {
+  .about { display: flex; flex-direction: column; align-items: stretch; gap: 20px; padding-top: 58px; }
+  .about__content { order: 0; }
+  .about__visual { order: 1; width: min(88%, 390px); align-self: center; min-height: 280px; }
+  .about__photo { max-height: 440px; }
+  .about-badge { font-size: 9px; padding: 9px 11px; border-radius: 14px; }
+  .about-badge--one { top: 8%; left: -12%; }
+  .about-badge--two { top: 43%; right: -14%; }
+  .about-badge--three { bottom: 7%; left: -8%; }
+  .rehab__steps { grid-template-columns: 1fr; }
+  .rehab-step, .rehab-step:last-child { grid-column: auto; min-height: 0; }
+  .situations__content { grid-template-columns: 1fr; }
+  .situations__photo-wrap { position: relative; top: auto; width: min(78%, 360px); margin: 8px auto 0; }
+  .situations__photo { max-height: 420px; }
+  .situations-badge--top { left: -12%; }
+  .situations-badge--bottom { right: -12%; }
+  .audience-switch { width: 100%; }
+  .audience-switch__button { flex: 1; min-width: 0; }
+}
+@media (min-width: 700px) {
+  .about { min-height: auto; }
+  .about__visual { min-height: 460px; }
+  .parents { display: none; }
+}
