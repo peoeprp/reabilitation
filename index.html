@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Бочкарёв Иван Александрович — врач-реабилитолог</title>
+  <meta name="description" content="Врач-реабилитолог: комплексная реабилитация, массаж, гидрокинезиология, ЛФК и физиотерапия для новорождённых и детей раннего возраста.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ================= ШАПКА ================= -->
+  <header class="header" id="header">
+    <a href="#top" class="header__logo">Иван Бочкарев</a>
+
+    <nav class="nav" id="nav" aria-label="Основное меню">
+      <a href="#services" class="nav__link">Услуги</a>
+      <a href="#rehab" class="nav__link">Реабилитация</a>
+      <a href="#faq" class="nav__link">Подход</a>
+      <a href="#contacts" class="nav__link">Контакты</a>
+    </nav>
+
+    <div class="header__actions">
+      <a href="#contacts" class="btn btn--gray header__btn">записаться</a>
+      <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">
+        <span class="burger__icon">з</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ================= ГЛАВНЫЙ ЭКРАН ================= -->
+    <section class="hero">
+      <!-- фон главного экрана -->
+      <img class="hero__bg" src="img/hero-bg.jpg" alt="" aria-hidden="true">
+
+      <div class="hero__inner">
+
+        <!-- левая часть: текст -->
+        <div class="hero__content">
+          <p class="hero__profession">врач-реабилитолог</p>
+          <h1 class="hero__title">Бочкарев Иван<br>Александрович</h1>
+          <p class="hero__subtitle">
+            комплексная реабилитация,<br>
+            лечебный массаж, гидрокинезиология,<br>
+            ЛФК и физиотерапия
+          </p>
+
+          <a href="#contacts" class="btn btn--white hero__btn">записаться на приём</a>
+
+          <div class="hero__stats">
+            <div class="stat">
+              <p class="stat__num">более 12 лет работы</p>
+              <p class="stat__text">в том числе в СПБГПМУ<br> на кафедре патологии<br>новорождённых</p>
+            </div>
+            <div class="stat">
+              <p class="stat__num">5 направлений</p>
+              <p class="stat__text">комплексной работы<br>с восстановлением<br>функций</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- правая часть: фото + плашки одним блоком.
+             Плашки позиционируются в % относительно фото,
+             поэтому всегда остаются на уровне головы / сердца / рук. -->
+        <div class="hero__photo">
+          <img class="hero__img" src="img/ivan.png" width="1050" height="943" alt="Врач-реабилитолог Бочкарёв Иван Александрович">
+
+          <span class="badge badge--approach">Индивидуальный подход<br>к каждому клиенту</span>
+          <span class="badge badge--home">Работа с выездом на дом</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= С КАКИМИ ЗАПРОСАМИ Я РАБОТАЮ ================= -->
+    <section class="services" id="services">
+      <img class="blob blob--gray-left" src="img/blob-gray-left.png" alt="" aria-hidden="true">
+      <img class="blob blob--green-tube" src="img/blob-green-tube.png" alt="" aria-hidden="true">
+
+      <h2 class="section-title services__title">С какими запросами я работаю</h2>
+
+      <div class="slider">
+        <!-- карусель: свайп / перетягивание мышью / стрелки / клавиши ← → -->
+        <div class="cards" id="cards" tabindex="0" role="region" aria-label="Услуги — карусель">
+
+          <article class="card">
+            <img class="card__img" src="img/card-1.jpg" alt="Реабилитация детей с патологиями и нарушениями развития" draggable="false">
+            <h3 class="card__label">Реабилитация детей<br>с патологиями<br>и нарушениями развития</h3>
+          </article>
+
+          <article class="card">
+            <img class="card__img" src="img/card-2.jpg" alt="Комплексная реабилитация детей раннего возраста" draggable="false">
+            <h3 class="card__label">Комплексная реабилитация<br>детей раннего возраста</h3>
+          </article>
+
+          <article class="card">
+            <img class="card__img" src="img/card-3.jpg" alt="Лечебная физкультура для младенцев и детей раннего возраста" draggable="false">
+            <h3 class="card__label">Лечебная физкультура<br>для младенцев и детей<br>раннего возраста</h3>
+          </article>
+
+          <!-- ТЕСТОВЫЕ карточки 4 и 5: используют уже имеющиеся фото.
+               Замените src и текст на свои, когда будут готовы. -->
+          <article class="card">
+            <img class="card__img" src="img/card-4.jpg" alt="Гидрокинезиология для детей" draggable="false">
+            <h3 class="card__label">Гидрокинезиология<br>для детей<br>и подростков</h3>
+          </article>
+
+          <article class="card">
+            <img class="card__img" src="img/card-5.jpg" alt="Физиотерапия и восстановление функций" draggable="false">
+            <h3 class="card__label">Физиотерапия<br>и восстановление<br>функций</h3>
+          </article>
+
+        </div>
+
+        <!-- стрелки листания карточек -->
+        <div class="slider__controls">
+          <button class="slider__btn" id="cardsPrev" type="button" aria-label="Предыдущая карточка">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+          </button>
+          <button class="slider__btn" id="cardsNext" type="button" aria-label="Следующая карточка">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ПАТОЛОГИЯ НОВОРОЖДЁННЫХ ================= -->
+    <section class="about" id="about" style="
+    padding-bottom: 5%;
+    padding-top: 5%;
+">
+      <div class="about__content">
+        <p class="about__tag">профессиональное направление</p>
+        <h2 class="about__title">Патология новорождённых</h2>
+        <p class="about__text">Работа с новорождёнными и детьми раннего возраста требует учёта этапов развития, индивидуальных особенностей ребёнка и медицинских показаний.</p>
+        <div class="parents-inline">
+          <h3 class="parents-inline__title">Что важно для родителей</h3>
+          <ul class="parents-inline__list">
+            <li>Внимательное отношение к анамнезу и заключениям профильных специалистов.</li>
+            <li>Согласование реабилитационных мероприятий с лечащим врачом, когда это необходимо.</li>
+            <li>Понятное обсуждение целей, методов и дальнейших действий.</li>
+            <li>Оценка состояния ребёнка и его функциональных возможностей в пределах компетенции специалиста.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="about__visual">
+        <img class="about__photo" src="img/about-photo.png" width="1086" height="1448" alt="Реабилитация новорождённых и детей раннего возраста">
+        <span class="badge about-badge about-badge--one">Индивидуальный<br>подход</span>
+        <span class="badge about-badge about-badge--two">С учётом возраста<br>и состояния ребёнка</span>
+        <span class="badge about-badge about-badge--three">В диалоге<br>с родителями</span>
+      </div>
+    </section>
+
+    <!-- ================= БЛОК 03: КАК СТРОИТСЯ РЕАБИЛИТАЦИЯ ================= -->
+    <section class="rehab" id="rehab" style="
+    padding-top: 5%;
+    padding-bottom: 5%;
+">
+      <div class="rehab__intro">
+        <p class="eyebrow">индивидуальный подход</p>
+        <h2 class="section-title rehab__title">Каждый этап развития имеет значение</h2>
+        <p class="rehab__lead">Реабилитация детей раннего возраста требует особого внимания к возрасту, двигательным возможностям и состоянию здоровья ребёнка. Программа выстраивается индивидуально — от первичной оценки до наблюдения за динамикой и корректировки рекомендаций.</p>
+      </div>
+      <div class="rehab__steps">
+        <article class="rehab-step"><span class="rehab-step__num">01 / ПЕРВИЧНАЯ ОЦЕНКА</span><h3>Знакомство с ребёнком и его особенностями</h3><p>Изучение анамнеза, медицинских заключений и особенностей двигательного развития. При необходимости — рекомендация дополнительной консультации профильного специалиста.</p></article>
+        <article class="rehab-step"><span class="rehab-step__num">02 / ЦЕЛИ РЕАБИЛИТАЦИИ</span><h3>Определение индивидуальных задач</h3><p>Цели формируются с учётом возраста, состояния и доступных ребёнку двигательных навыков.</p></article>
+        <article class="rehab-step"><span class="rehab-step__num">03 / ПОДБОР МЕТОДОВ</span><h3>Подходящие методы для конкретного ребёнка</h3><p>По показаниям программа может включать ЛФК, физическую терапию, лечебный массаж и гидрокинезиологию. Методы подбираются индивидуально.</p></article>
+        <article class="rehab-step"><span class="rehab-step__num">04 / ВЗАИМОДЕЙСТВИЕ</span><h3>Понимание задач реабилитации</h3><p>Родители узнают цели занятий, рекомендации по двигательной активности и на какие изменения обращать внимание.</p></article>
+        <article class="rehab-step"><span class="rehab-step__num">05 / НАБЛЮДЕНИЕ</span><h3>Корректировка по мере развития</h3><p>Изменения оцениваются в динамике, а задачи и рекомендации пересматриваются с учётом результатов.</p></article>
+      </div>
+      <p class="rehab__principle"><strong>Главный принцип</strong> Реабилитация ребёнка — не набор одинаковых процедур, а последовательная работа с учётом индивидуальных особенностей, медицинских показаний и задач развития.</p>
+    </section>
+
+    <!-- ================= БЛОК 04: СИТУАЦИИ ДЛЯ ОБРАЩЕНИЯ ================= -->
+    <section class="situations" id="situations">
+      <div class="situations__header">
+        <p class="eyebrow">когда стоит обратиться</p>
+        <h2 class="section-title situations__title">Подход, который учитывает ваши потребности</h2>
+        <p class="situations__lead">Выберите, для кого вы ищете помощь, чтобы ознакомиться с основными направлениями работы.</p>
+        <div class="audience-switch" role="tablist" aria-label="Выберите аудиторию">
+          <button class="audience-switch__button is-active" type="button" role="tab" id="tab-children" aria-selected="true" aria-controls="situation-content" data-audience="children">Дети</button>
+          <button class="audience-switch__button" type="button" role="tab" id="tab-adults" aria-selected="false" aria-controls="situation-content" data-audience="adults">Взрослые</button>
+        </div>
+      </div>
+      <div class="situations__content" id="situation-content" role="tabpanel" aria-labelledby="tab-children" aria-live="polite">
+        <div class="situations__copy">
+          <h3 class="situations__headline">Реабилитация детей с первых месяцев жизни</h3>
+          <p class="situations__description">Индивидуальный подход к двигательному развитию, особенностям здоровья и потребностям ребёнка.</p>
+          <div class="situation-list" id="situation-list">
+            <article class="situation-item"><span>01</span><div><h4>Особенности двигательного развития</h4><p>Если вы замечаете необычные особенности движений, контроля положения тела или освоения навыков, обсудите их с педиатром и профильным специалистом.</p></div></article>
+            <article class="situation-item"><span>02</span><div><h4>Установленные патологии и неврологические нарушения</h4><p>При наличии диагноза или рекомендаций врача может потребоваться индивидуальная программа с учётом состояния ребёнка.</p></div></article>
+            <article class="situation-item"><span>03</span><div><h4>Поддержка двигательных навыков</h4><p>ЛФК и физическая терапия могут применяться для работы над двигательными навыками, если это соответствует индивидуальным показаниям.</p></div></article>
+            <article class="situation-item"><span>04</span><div><h4>Дополнительные методы реабилитации</h4><p>Лечебный массаж и гидрокинезиология рассматриваются как элементы программы, если подходят ребёнку по возрасту и состоянию.</p></div></article>
+          </div>
+          <p class="situations__note">Карточки описывают поводы для консультации, а не устанавливают диагноз. Методы выбираются индивидуально после оценки состояния и противопоказаний.</p>
+          <a class="btn btn--gray situations__cta" href="#contacts">Обсудить консультацию</a>
+        </div>
+        <div class="situations__photo-wrap">
+         
+          <span class="badge situations-badge situations-badge--top">Оценка развития</span>
+          <span class="badge situations-badge situations-badge--bottom">Индивидуальная программа</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= КОНТАКТЫ (нижний блок с графикой) ================= -->
+    <section class="contacts" id="contacts">
+      <img class="blob blob--gray-bottom" src="img/blob-gray-bottom.png" alt="" aria-hidden="true">
+      <!-- В макете этот блок содержит только графику.
+           Сюда можно добавить телефон, мессенджеры и форму записи. -->
+    </section>
+
+  </main>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
