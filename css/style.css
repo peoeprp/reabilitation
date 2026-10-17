@@ -79,6 +79,13 @@ button { font-family: inherit; cursor: pointer; border: 0; background: none; pad
   user-select: none;
   z-index: 0;
 }
+.header__logo-image {
+    display: block;
+    width: 35%;
+    max-width: 180px;
+    height: auto;
+    object-fit: contain;
+}
 
 /* ---------- Кнопки: ЕДИНАЯ система ----------
    Один размер для всех кнопок сайта. Меняются только цвет (вариант).
@@ -937,3 +944,70 @@ body.menu-open, body.modal-open { overflow: hidden; }
 .document-viewer img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .document-viewer__close { position: absolute; top: 16px; right: 18px; width: 42px; height: 42px; border: 0; border-radius: 50%; background: #fff; color: #222; font-size: 28px; cursor: pointer; }
 @media (max-width: 600px) { .documents-gallery { grid-template-columns: 1fr; } .documents-gallery__item img { max-height: 360px; } }
+
+
+/* Отзывы: компактная плашка под лентой и прокручиваемый список */
+.reviews__grid[hidden], .reviews__empty[hidden] { display:none !important; }
+.reviews__grid {
+  width:100%; max-height:min(54vh,520px); overflow-y:auto; overscroll-behavior:contain;
+  padding:2px 8px 12px 2px; scrollbar-width:thin; scrollbar-color:#9cbea3 transparent;
+  align-content:start;
+}
+.review-card { min-width:0; }
+.review-card__stars { margin:0 0 12px; color:#c18a2e; letter-spacing:2px; font-size:17px; }
+.reviews__empty {
+  max-width:100%; width:100%; padding:clamp(18px,2.4vw,28px);
+  display:flex; flex-wrap:wrap; align-items:center; gap:10px 22px;
+  border:1px solid rgba(58,42,34,.07); border-radius:20px;
+}
+.reviews__empty .reviews__mark { margin:0; font-size:42px; }
+.reviews__empty h3 { margin:0; font-size:clamp(17px,1.2vw + 12px,22px); }
+.reviews__empty p { flex:1 1 260px; margin:0; font-size:12px; }
+.reviews__empty .btn { flex:0 0 auto; }
+.review-rating { margin:0; padding:0; border:0; }
+.review-rating legend { margin-bottom:8px; font-size:12px; font-weight:600; }
+.review-rating__choices { display:flex; flex-direction:row-reverse; justify-content:flex-end; gap:5px; }
+.review-rating__choices label { display:block; cursor:pointer; }
+.review-rating__choices input { position:absolute; opacity:0; width:1px; height:1px; }
+.review-rating__choices label span[aria-hidden="true"] { display:block; font-size:32px; line-height:1.2; color:#c9c9c0; transition:color .15s ease, transform .15s ease; }
+.review-rating__choices label:hover span[aria-hidden="true"],
+.review-rating__choices label:hover ~ label span[aria-hidden="true"],
+.review-rating__choices input:checked ~ span[aria-hidden="true"],
+.review-rating__choices label:has(input:checked) span[aria-hidden="true"] { color:#c18a2e; }
+.review-rating__choices label:has(input:focus-visible) span[aria-hidden="true"] { outline:2px solid #648b70; outline-offset:3px; border-radius:4px; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+@media(max-width:699px) {
+  .reviews__grid { max-height:58vh; grid-template-columns:1fr; }
+  .reviews__empty { align-items:flex-start; }
+  .reviews__empty .btn { width:100%; }
+}
+
+
+/* Карточка отправки отзыва всегда стоит первой в ленте */
+.reviews__write-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 100%;
+  padding: clamp(20px, 2.5vw, 30px);
+  border: 1px solid rgba(58,42,34,.09);
+  border-radius: 22px;
+  background: rgba(255,255,255,.8);
+  box-shadow: 0 8px 28px rgba(39,59,49,.05);
+}
+.reviews__write-card h3 {
+  margin: 0 0 12px;
+  font-size: clamp(20px, 1.5vw + 12px, 30px);
+  line-height: 1.2;
+}
+.reviews__write-card p {
+  margin: 0 0 24px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.reviews__write-card .btn { margin-top: auto; }
+.review-rating__choices label:has(input:checked) span[aria-hidden="true"],
+.review-rating__choices label:has(input:checked) ~ label span[aria-hidden="true"] {
+  color: #c18a2e;
+}
