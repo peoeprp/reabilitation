@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Бочкарёв Иван Александрович — врач-реабилитолог</title>
+  <title>Врач-реабилитолог СПБ</title>
   <meta name="description" content="Врач-реабилитолог: комплексная реабилитация, массаж, гидрокинезиология, ЛФК и физиотерапия для новорождённых и детей раннего возраста.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +15,9 @@
 
   <!-- ================= ШАПКА ================= -->
   <header class="header" id="header">
-    <a href="#top" class="header__logo">Иван Бочкарев</a>
+    <a href="#top" class="header__logo">
+    <img src="img/logo.png" alt="Иван Бочкарев" class="header__logo-image">
+</a>
 
     <nav class="nav" id="nav" aria-label="Основное меню">
       <a href="#services" class="nav__link">Услуги</a>
@@ -222,8 +224,14 @@
         <h2 class="section-title">Отзывы</h2>
         <p>Здесь можно ознакомиться с впечатлениями пациентов и родителей после взаимодействия со специалистом.</p>
       </div>
-      <div class="reviews__empty" id="reviews-empty"><span class="reviews__mark" aria-hidden="true">“</span><h3>Ваш отзыв может помочь другим</h3><p>Пока отзывы не опубликованы. Если вы уже обращались за консультацией, поделитесь своим опытом. Перед публикацией отзыв проверяется на наличие персональных и медицинских данных.</p><button type="button" class="btn btn--primary" data-open-modal="review-modal">Оставить отзыв</button></div>
-      <div class="reviews__grid" id="reviews-list" aria-live="polite"></div>
+      <div class="reviews__grid" id="reviews-list" aria-live="polite">
+        <article class="reviews__write-card">
+          <span class="reviews__mark" aria-hidden="true">“</span>
+          <h3>Ваш отзыв может помочь другим</h3>
+          <p>Поделитесь своим опытом — публикация появится после проверки.</p>
+          <button type="button" class="btn btn--primary" data-open-modal="review-modal">Отправить отзыв</button>
+        </article>
+      </div>
     </section>
 
     <!-- ================= КОНТАКТЫ И ФУТЕР ================= -->
@@ -271,7 +279,13 @@
   <div class="modal" id="review-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="review-modal-title">
     <div class="modal__backdrop" data-close-modal></div><div class="modal__panel" role="document"><button class="modal__close" type="button" aria-label="Закрыть окно" data-close-modal>×</button>
       <p class="eyebrow">обратная связь</p><h2 id="review-modal-title">Оставить отзыв</h2><p class="modal__lead">Расскажите о своём опыте без фамилий, диагнозов и других персональных данных. Отзыв будет подготовлен для отправки на проверку, но не опубликуется автоматически.</p>
-      <form id="review-form" class="modal-form"><label>Как к вам обращаться?<input name="reviewer" type="text" placeholder="Имя или инициалы" required></label><label>К кому относится обращение?<select name="reviewAudience" required><option value="" selected disabled>Выберите вариант</option><option>Ребёнок</option><option>Взрослый</option></select></label><label>Ваш отзыв<textarea name="reviewText" rows="5" minlength="20" required placeholder="Опишите впечатления от общения и организации работы. Не указывайте диагнозы и личные данные."></textarea></label><label class="modal-form__consent"><input type="checkbox" name="reviewConsent" required><span>Я согласен(на) на передачу текста отзыва для рассмотрения и понимаю, что публикация возможна после проверки.</span></label><button class="btn btn--primary" type="submit">Подготовить отзыв</button></form>
+      <form id="review-form" class="modal-form"><label>Как к вам обращаться?<input name="reviewer" type="text" placeholder="Имя или инициалы" required></label><label>К кому относится обращение?<select name="reviewAudience" required><option value="" selected disabled>Выберите вариант</option><option>Ребёнок</option><option>Взрослый</option></select></label><fieldset class="review-rating"><legend>Ваша оценка</legend><div class="review-rating__choices" role="radiogroup" aria-label="Оценка от 1 до 5 звёзд">
+          <label><input type="radio" name="rating" value="1" required><span aria-hidden="true">★</span><span class="sr-only">1 звезда</span></label>
+          <label><input type="radio" name="rating" value="2"><span aria-hidden="true">★</span><span class="sr-only">2 звезды</span></label>
+          <label><input type="radio" name="rating" value="3"><span aria-hidden="true">★</span><span class="sr-only">3 звезды</span></label>
+          <label><input type="radio" name="rating" value="4"><span aria-hidden="true">★</span><span class="sr-only">4 звезды</span></label>
+          <label><input type="radio" name="rating" value="5"><span aria-hidden="true">★</span><span class="sr-only">5 звёзд</span></label>
+        </div></fieldset><label>Ваш отзыв<textarea name="reviewText" rows="5" minlength="20" required placeholder="Опишите впечатления от общения и организации работы. Не указывайте диагнозы и личные данные."></textarea></label><label class="modal-form__consent"><input type="checkbox" name="reviewConsent" required><span>Я согласен(на) на передачу текста отзыва для рассмотрения и понимаю, что публикация возможна после проверки.</span></label><button class="btn btn--primary" type="submit">Отправить отзыв</button></form>
     </div>
   </div>
 
