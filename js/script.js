@@ -603,47 +603,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ---------- Публичные отзывы из Supabase ----------
   const reviewsList = document.getElementById('reviews-list');
-  const reviewsEmpty = document.getElementById('reviews-empty');
+  const reviewWriteCard = reviewsList?.querySelector('.reviews__write-card');
 
   const loadPublishedReviews = async () => {
     if (!supabaseClient || !reviewsList) return;
     try {
-      // Публикуются только отзывы, явно одобренные модератором.
       const { data, error } = await supabaseClient
         .from('reviews')
-        .select('reviewer, review_audience, review_text, created_at')
-        .eq('is_published', true)
-        .order('created_at', { ascending: false })
-        .limit(30);
+        .select('reviewer, review_audience, review_text, rating, published_at')
+        .eq('status', 'approved')
+        .not('published_at', 'is', null)
+        .order('published_at', { ascending: false })
+        .limit(100);
       if (error) throw error;
-      if (!Array.isArray(data) || data.length === 0) return;
       reviewsList.replaceChildren();
-      data.forEach((review) => {
+      if (reviewWriteCard) reviewsList.append(reviewWriteCard);
+      (data || []).forEach((review) => {
         const article = document.createElement('article');
         article.className = 'review-card';
         const quote = document.createElement('span');
         quote.className = 'review-card__quote';
         quote.setAttribute('aria-hidden', 'true');
         quote.textContent = '“';
+        const stars = document.createElement('div');
+        stars.className = 'review-card__stars';
+        stars.setAttribute('aria-label', `Оценка: ${review.rating || 5} из 5`);
+        stars.textContent = '★'.repeat(Math.max(1, Math.min(5, Number(review.rating) || 5))) +
+          '☆'.repeat(5 - Math.max(1, Math.min(5, Number(review.rating) || 5)));
         const text = document.createElement('p');
         text.className = 'review-card__text';
         text.textContent = review.review_text || '';
         const meta = document.createElement('p');
         meta.className = 'review-card__meta';
-        const date = review.created_at ? new Date(review.created_at) : null;
-        const dateText = date && !Number.isNaN(date.getTime())
-          ? ` · ${date.toLocaleDateString('ru-RU')}` : '';
+        const date = review.published_at ? new Date(review.published_at) : null;
+        const dateText = date && !Number.isNaN(date.getTime()) ? ` · ${date.toLocaleDateString('ru-RU')}` : '';
         meta.textContent = `${review.reviewer || 'Пациент'}${review.review_audience ? ` · ${review.review_audience.toLowerCase()}` : ''}${dateText}`;
-        article.append(quote, text, meta);
+        article.append(quote, stars, text, meta);
         reviewsList.append(article);
       });
-      reviewsEmpty?.setAttribute('hidden', '');
+      reviewsList.hidden = false;
     } catch (error) {
-      // Ошибка загрузки не мешает остальному сайту работать.
       console.warn('Не удалось загрузить опубликованные отзывы из Supabase:', error);
     }
   };
   loadPublishedReviews();
+  // Обновляем список при публикации/изменении отзыва без перезагрузки страницы.
+  if (supabaseClient) {
+    supabaseClient.channel('public-approved-reviews')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'reviews' }, loadPublishedReviews)
+      .subscribe();
+  }
 
   // ---------- Форма отзыва: Supabase ----------
   const reviewForm = document.getElementById('review-form');
@@ -674,6 +683,7 @@ document.addEventListener('DOMContentLoaded', () => {
       reviewer: String(formData.get('reviewer') || '').trim(),
       review_audience: String(formData.get('reviewAudience') || ''),
       review_text: String(formData.get('reviewText') || '').trim(),
+      rating: Number(formData.get('rating')),
       review_consent: consent
     };
 
@@ -682,7 +692,8 @@ document.addEventListener('DOMContentLoaded', () => {
       review.reviewer.length > 80 ||
       !['Ребёнок', 'Взрослый'].includes(review.review_audience) ||
       review.review_text.length < 20 ||
-      review.review_text.length > 3000
+      review.review_text.length > 3000 ||
+      !Number.isInteger(review.rating) || review.rating < 1 || review.rating > 5
     ) {
       showToast('Проверьте заполнение полей формы.');
       return;
