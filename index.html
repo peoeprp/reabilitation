@@ -29,7 +29,7 @@
     <div class="header__actions">
       <button type="button" class="btn btn--primary header__btn" data-open-modal="consult-modal">записаться</button>
       <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">
-        <span class="burger__icon">з</span>
+        <span class="burger__icon" aria-hidden="true"><span></span><span></span><span></span></span>
       </button>
     </div>
   </header>
@@ -45,7 +45,9 @@
 
         <!-- левая часть: текст -->
         <div class="hero__content">
-          <p class="hero__profession">врач-реабилитолог</p>
+          <div class="hero__meta">
+            <p class="hero__location"><svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg> Санкт-Петербург</p>
+          </div>
           <h1 class="hero__title">Бочкарев Иван<br>Александрович</h1>
           <p class="hero__subtitle">
             комплексная реабилитация,<br>
@@ -82,8 +84,6 @@
 
     <!-- ================= С КАКИМИ ЗАПРОСАМИ Я РАБОТАЮ ================= -->
     <section class="services screen" id="services">
-      <img class="blob blob--gray-left" src="img/blob-hero-green.svg" alt="" aria-hidden="true">
-      <img class="blob blob--green-tube" src="img/blob-hero-green.svg" alt="" aria-hidden="true">
 
       <h2 class="section-title services__title">С какими запросами я работаю</h2>
 
@@ -109,8 +109,8 @@
           <!-- ТЕСТОВЫЕ карточки 4 и 5: используют уже имеющиеся фото.
                Замените src и текст на свои, когда будут готовы. -->
           <article class="card">
-            <img class="card__img" src="img/massage-timur-2.jpg" alt="Гидрокинезиология для детей" draggable="false">
-            <h3 class="card__label">Гидрокинезиология<br>для детей<br>и подростков</h3>
+            <img class="card__img" src="img/massage-timur-2.jpeg" alt="Гидрокинезиология для детей" draggable="false">
+            <h3 class="card__label">Лечебный массаж<br>для взрослых<br></h3>
           </article>
 
           <article class="card">
@@ -198,11 +198,6 @@
           <p class="situations__note">Карточки описывают поводы для консультации, а не устанавливают диагноз. Методы выбираются индивидуально после оценки состояния и противопоказаний.</p>
           <button class="btn btn--primary situations__cta" type="button" data-open-modal="consult-modal" data-request="consult">Обсудить консультацию</button>
         </div>
-        <div class="situations__photo-wrap">
-          <img class="situations__photo" src="img/massage-timur-2.jpg" alt="Специалист проводит реабилитационное занятие">
-          <span class="badge situations-badge situations-badge--top">Оценка развития</span>
-          <span class="badge situations-badge situations-badge--bottom">Индивидуальная программа</span>
-        </div>
       </div>
     </section>
 
@@ -214,11 +209,10 @@
         <p>Дипломы, документы об образовании и сертификаты о дополнительном обучении помогают ознакомиться с профессиональной подготовкой специалиста.</p>
       </div>
       <div class="documents__grid">
-        <article class="document-card"><div class="document-card__icon" aria-hidden="true">01</div><div><h3>Диплом о высшем медицинском образовании</h3><p>Добавьте скан или фотографию документа.</p></div><span class="document-card__status">Документ будет добавлен</span></article>
-        <article class="document-card"><div class="document-card__icon" aria-hidden="true">02</div><div><h3>Документы о профессиональной подготовке</h3><p>Сертификаты специалиста и документы о повышении квалификации.</p></div><span class="document-card__status">Документы будут добавлены</span></article>
-        <article class="document-card"><div class="document-card__icon" aria-hidden="true">03</div><div><h3>Дополнительные сертификаты</h3><p>Обучение по реабилитации, ЛФК, массажу и другим направлениям.</p></div><span class="document-card__status">Документы будут добавлены</span></article>
+        <button type="button" class="document-card" data-document-category="diplomas" aria-haspopup="dialog"><span class="document-card__icon" aria-hidden="true">01</span><span class="document-card__body"><h3>Диплом о специальном профессиональном образовании</h3><p>Нажмите, чтобы посмотреть документы.</p></span><span class="document-card__status" aria-hidden="true">Смотреть ↗</span></button>
+        <button type="button" class="document-card" data-document-category="certificates" aria-haspopup="dialog"><span class="document-card__icon" aria-hidden="true">02</span><span class="document-card__body"><h3>Документы о профессиональной подготовке</h3><p>Сертификаты специалиста и документы о повышении квалификации.</p></span><span class="document-card__status" aria-hidden="true">Смотреть ↗</span></button>
+        <button type="button" class="document-card" data-document-category="additional" aria-haspopup="dialog"><span class="document-card__icon" aria-hidden="true">03</span><span class="document-card__body"><h3>Благодарственные письма</h3><p>Нажмите, чтобы посмотреть документы.</p></span><span class="document-card__status" aria-hidden="true">Смотреть ↗</span></button>
       </div>
-      <p class="documents__note">Перед публикацией разместите только действительные документы и проверьте, какие персональные данные допустимо показывать публично.</p>
     </section>
 
     <!-- ================= ОТЗЫВЫ ================= -->
@@ -228,14 +222,15 @@
         <h2 class="section-title">Отзывы</h2>
         <p>Здесь можно ознакомиться с впечатлениями пациентов и родителей после взаимодействия со специалистом.</p>
       </div>
-      <div class="reviews__empty"><span class="reviews__mark" aria-hidden="true">“</span><h3>Ваш отзыв может помочь другим</h3><p>Пока отзывы не опубликованы. Если вы уже обращались за консультацией, поделитесь своим опытом. Перед публикацией отзыв проверяется на наличие персональных и медицинских данных.</p><button type="button" class="btn btn--primary" data-open-modal="review-modal">Оставить отзыв</button></div>
+      <div class="reviews__empty" id="reviews-empty"><span class="reviews__mark" aria-hidden="true">“</span><h3>Ваш отзыв может помочь другим</h3><p>Пока отзывы не опубликованы. Если вы уже обращались за консультацией, поделитесь своим опытом. Перед публикацией отзыв проверяется на наличие персональных и медицинских данных.</p><button type="button" class="btn btn--primary" data-open-modal="review-modal">Оставить отзыв</button></div>
+      <div class="reviews__grid" id="reviews-list" aria-live="polite"></div>
     </section>
 
     <!-- ================= КОНТАКТЫ И ФУТЕР ================= -->
     <footer class="footer" id="contacts">
-      <div class="footer__main"><div class="footer__brand"><a href="#top" class="footer__logo">Иван Бочкарёв</a><p>Врач-реабилитолог<br>Индивидуальный подход к реабилитации детей и взрослых</p></div>
+      <div class="footer__main"><div class="footer__brand"><a href="#top" class="footer__logo">Иван Александрович Бочкарев</a><p>Врач-реабилитолог<br>Индивидуальный подход к реабилитации детей и взрослых</p></div>
         <div class="footer__contact"><h2>Связаться со специалистом</h2><p>Для первичного обращения опишите ситуацию и укажите, для кого нужна консультация. Это поможет сориентироваться по дальнейшим шагам.</p><button type="button" class="btn btn--white" data-open-modal="consult-modal">Обсудить консультацию</button></div>
-        <div class="footer__links"><h3>Контакты</h3><a href="tel:+79990000000" data-contact-placeholder="phone">+7 (999) 000-00-00</a><a href="https://t.me/your_username" target="_blank" rel="noopener noreferrer" data-contact-placeholder="telegram">Telegram</a><a href="https://max.ru/" target="_blank" rel="noopener noreferrer" data-contact-placeholder="max">MAX</a><a href="https://instagram.com/your_username" target="_blank" rel="noopener noreferrer" data-contact-placeholder="instagram">Instagram</a><p class="footer__hint">Контактные ссылки нужно заменить на актуальные перед публикацией.</p></div>
+        <div class="footer__links"><h3>Контакты</h3><a href="tel:+79219083877" data-contact-placeholder="phone">+7 (921) 908-38-77</a><a href="https://t.me/Evpat_ariec" target="_blank" rel="noopener noreferrer" data-contact-placeholder="telegram">Telegram</a><a href="https://max.ru/u/f9LHodD0cOL-0y3vhtj0b0SRZuoqYQmGtIGul7Yduzj55lAOd2Z9hZD-w1c" target="_blank" rel="noopener noreferrer" data-contact-placeholder="max">MAX</a></div>
       </div>
       <div class="footer__bottom"><span>© <span id="current-year">2026</span> Иван Бочкарёв</span><span>Информация на сайте не заменяет очную консультацию врача.</span></div>
     </footer>
@@ -255,9 +250,21 @@
         <p class="modal-form__privacy">Не указывайте паспортные данные и не прикладывайте медицинские документы в открытом сообщении. При необходимости специалист подскажет безопасный способ передачи информации.</p>
         <div class="modal__actions"><button class="btn btn--primary" type="submit">Подготовить сообщение</button></div>
       </form>
-      <div class="modal__messengers"><a class="btn btn--outline" href="https://t.me/your_username" target="_blank" rel="noopener noreferrer" data-contact-placeholder="telegram">Telegram</a><a class="btn btn--outline" href="https://max.ru/" target="_blank" rel="noopener noreferrer" data-contact-placeholder="max">MAX</a><a class="btn btn--outline" href="https://instagram.com/your_username" target="_blank" rel="noopener noreferrer" data-contact-placeholder="instagram">Instagram</a><a class="btn btn--outline" href="tel:+79990000000" data-contact-placeholder="phone">Позвонить</a></div>
-      <p class="modal__hint">Перед запуском замените демонстрационные контакты в HTML на реальные.</p>
+      <div class="modal__messengers"><a class="btn btn--outline" href="https://t.me/Evpat_ariec" target="_blank" rel="noopener noreferrer" data-contact-placeholder="telegram">Telegram</a><a class="btn btn--outline" href="https://max.ru/u/f9LHodD0cOL-0y3vhtj0b0SRZuoqYQmGtIGul7Yduzj55lAOd2Z9hZD-w1c" target="_blank" rel="noopener noreferrer" data-contact-placeholder="max">MAX</a><a class="btn btn--outline" href="tel:+79219083877" data-contact-placeholder="phone">Позвонить</a></div>
+      
     </div>
+  </div>
+
+  <!-- Галерея дипломов: документы добавляются владельцем сайта в код и папку img/diplomas -->
+  <div class="modal documents-modal" id="documents-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="documents-modal-title">
+    <div class="modal__backdrop" data-close-modal></div><div class="modal__panel documents-modal__panel" role="document"><button class="modal__close" type="button" aria-label="Закрыть окно" data-close-modal>×</button>
+      <p class="eyebrow">образование и квалификация</p><h2 id="documents-modal-title">Документы и сертификаты</h2><p class="modal__lead">Нажмите на изображение, чтобы увеличить его.</p>
+      <div class="documents-gallery" id="documents-gallery"></div>
+    </div>
+  </div>
+  <div class="document-viewer" id="document-viewer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Просмотр документа">
+    <button type="button" class="document-viewer__close" aria-label="Закрыть документ">×</button>
+    <img id="document-viewer-image" alt="Увеличенное изображение документа">
   </div>
 
   <!-- Модальное окно отзыва -->
