@@ -566,26 +566,84 @@ document.addEventListener('DOMContentLoaded', () => {
     return lines.filter((line) => line !== '').join('\n');
   };
 
-  const sendViaMessenger = (message) => {
-    const url = `https://t.me/share/url?url=&text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
-  // ---------- Форма консультации: Telegram ----------
+  // ---------- Форма консультации: копирование сообщения и очистка полей ----------
   const consultForm = document.getElementById('consult-form');
 
-  consultForm?.addEventListener('submit', (event) => {
-    event.preventDefault();
+  const copyText = async (text) => {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+    const helper = document.createElement('textarea');
+    helper.value = text;
+    helper.setAttribute('readonly', '');
+    helper.style.position = 'fixed';
+    helper.style.opacity = '0';
+    document.body.append(helper);
+    helper.select();
+    const copied = document.execCommand('copy');
+    helper.remove();
+    if (!copied) throw new Error('Clipboard copy failed');
+  };
 
+  consultForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
     if (!consultForm.reportValidity()) return;
 
-    sendViaMessenger(makeMessage(consultForm));
-    closeModal(document.getElementById('consult-modal'));
-
-    showToast(
-      'Сообщение подготовлено в Telegram — отправьте его, чтобы завершить запись.'
-    );
+    const message = makeMessage(consultForm);
+    try {
+      await copyText(message);
+      consultForm.reset();
+      showToast('Текст сообщения скопирован. Выберите Telegram или MAX ниже и вставьте текст в чат.');
+    } catch (error) {
+      console.error('Не удалось скопировать сообщение:', error);
+      showToast('Не удалось скопировать автоматически. Разрешите доступ к буферу обмена и попробуйте ещё раз.');
+    }
   });
+
+  // ---------- Публичные отзывы из Supabase ----------
+  const reviewsList = document.getElementById('reviews-list');
+  const reviewsEmpty = document.getElementById('reviews-empty');
+
+  const loadPublishedReviews = async () => {
+    if (!supabaseClient || !reviewsList) return;
+    try {
+      // Публикуются только отзывы, явно одобренные модератором.
+      const { data, error } = await supabaseClient
+        .from('reviews')
+        .select('reviewer, review_audience, review_text, created_at')
+        .eq('is_published', true)
+        .order('created_at', { ascending: false })
+        .limit(30);
+      if (error) throw error;
+      if (!Array.isArray(data) || data.length === 0) return;
+      reviewsList.replaceChildren();
+      data.forEach((review) => {
+        const article = document.createElement('article');
+        article.className = 'review-card';
+        const quote = document.createElement('span');
+        quote.className = 'review-card__quote';
+        quote.setAttribute('aria-hidden', 'true');
+        quote.textContent = '“';
+        const text = document.createElement('p');
+        text.className = 'review-card__text';
+        text.textContent = review.review_text || '';
+        const meta = document.createElement('p');
+        meta.className = 'review-card__meta';
+        const date = review.created_at ? new Date(review.created_at) : null;
+        const dateText = date && !Number.isNaN(date.getTime())
+          ? ` · ${date.toLocaleDateString('ru-RU')}` : '';
+        meta.textContent = `${review.reviewer || 'Пациент'}${review.review_audience ? ` · ${review.review_audience.toLowerCase()}` : ''}${dateText}`;
+        article.append(quote, text, meta);
+        reviewsList.append(article);
+      });
+      reviewsEmpty?.setAttribute('hidden', '');
+    } catch (error) {
+      // Ошибка загрузки не мешает остальному сайту работать.
+      console.warn('Не удалось загрузить опубликованные отзывы из Supabase:', error);
+    }
+  };
+  loadPublishedReviews();
 
   // ---------- Форма отзыва: Supabase ----------
   const reviewForm = document.getElementById('review-form');
@@ -664,6 +722,85 @@ document.addEventListener('DOMContentLoaded', () => {
         submitButton.textContent = originalButtonText;
       }
     }
+  });
+
+  // ---------- Галерея документов: изображения добавляет владелец в код проекта ----------
+  // Положите файлы в img/diplomas/ и добавьте записи в соответствующую категорию.
+  const documentCatalog = {
+    diplomas: [
+      { title: 'Документ о медицинском образовании', src: 'img/diplomas/diploma-1.jpg' },
+      { title: 'Документ о медицинском образовании', src: 'img/diplomas/diploma-2.jpg' },
+    ],
+    certificates: [
+      { src: 'img/diplomas/certificate-1.png' },
+      {  src: 'img/diplomas/certificate-2.jpg' },
+    ],
+    additional: [
+       {  src: 'img/diplomas/letter-1.png' },
+    ]
+  };
+  const documentsModal = document.getElementById('documents-modal');
+  const documentsGallery = document.getElementById('documents-gallery');
+  const documentsModalTitle = document.getElementById('documents-modal-title');
+  const documentViewer = document.getElementById('document-viewer');
+  const documentViewerImage = document.getElementById('document-viewer-image');
+  const categoryTitles = {
+    diplomas: 'Дипломы об образовании',
+    certificates: 'Документы о профессиональной подготовке',
+    additional: 'Благодарственные письма>'
+  };
+
+  document.querySelectorAll('[data-document-category]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const category = button.dataset.documentCategory;
+      const documents = documentCatalog[category] || [];
+      if (documentsModalTitle) documentsModalTitle.textContent = categoryTitles[category] || 'Документы';
+      if (documentsGallery) {
+        documentsGallery.replaceChildren();
+        if (!documents.length) {
+          const note = document.createElement('p');
+          note.className = 'documents-gallery__empty';
+          note.textContent = 'Документы пока не добавлены. Добавьте изображения в папку img/diplomas и укажите их в массиве documentCatalog в js/script.js.';
+          documentsGallery.append(note);
+        }
+        documents.forEach((doc) => {
+          const item = document.createElement('button');
+          item.type = 'button';
+          item.className = 'documents-gallery__item';
+          item.setAttribute('aria-label', `Увеличить: ${doc.title}`);
+          const img = document.createElement('img');
+          img.src = doc.src;
+          img.alt = doc.title;
+          img.loading = 'lazy';
+          const caption = document.createElement('span');
+          caption.textContent = doc.title;
+          img.addEventListener('error', () => item.remove());
+          item.append(img, caption);
+          item.addEventListener('click', () => {
+            if (!documentViewer || !documentViewerImage) return;
+            documentViewerImage.src = doc.src;
+            documentViewerImage.alt = doc.title;
+            documentViewer.classList.add('is-open');
+            documentViewer.setAttribute('aria-hidden', 'false');
+          });
+          documentsGallery.append(item);
+        });
+      }
+      openModal(documentsModal);
+    });
+  });
+
+  const closeDocumentViewer = () => {
+    documentViewer?.classList.remove('is-open');
+    documentViewer?.setAttribute('aria-hidden', 'true');
+    if (documentViewerImage) documentViewerImage.removeAttribute('src');
+  };
+  document.querySelector('.document-viewer__close')?.addEventListener('click', closeDocumentViewer);
+  documentViewer?.addEventListener('click', (event) => {
+    if (event.target === documentViewer) closeDocumentViewer();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeDocumentViewer();
   });
 
   // ---------- Текущий год в футере ----------
