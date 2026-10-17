@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-scroll="stack">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,12 +20,14 @@
     <nav class="nav" id="nav" aria-label="Основное меню">
       <a href="#services" class="nav__link">Услуги</a>
       <a href="#rehab" class="nav__link">Реабилитация</a>
-      <a href="#faq" class="nav__link">Подход</a>
+      <a href="#situations" class="nav__link">Подход</a>
+      <a href="#documents" class="nav__link">Документы</a>
+      <a href="#reviews" class="nav__link">Отзывы</a>
       <a href="#contacts" class="nav__link">Контакты</a>
     </nav>
 
     <div class="header__actions">
-      <a href="#contacts" class="btn btn--gray header__btn">записаться</a>
+      <button type="button" class="btn btn--primary header__btn" data-open-modal="consult-modal">записаться</button>
       <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">
         <span class="burger__icon">з</span>
       </button>
@@ -35,7 +37,7 @@
   <main id="top">
 
     <!-- ================= ГЛАВНЫЙ ЭКРАН ================= -->
-    <section class="hero">
+    <section class="hero screen">
       <!-- фон главного экрана -->
       <img class="hero__bg" src="img/hero-bg.jpg" alt="" aria-hidden="true">
 
@@ -51,7 +53,7 @@
             ЛФК и физиотерапия
           </p>
 
-          <a href="#contacts" class="btn btn--white hero__btn">записаться на приём</a>
+          <button type="button" class="btn btn--white hero__btn" data-open-modal="consult-modal">записаться на приём</button>
 
           <div class="hero__stats">
             <div class="stat">
@@ -79,9 +81,9 @@
     </section>
 
     <!-- ================= С КАКИМИ ЗАПРОСАМИ Я РАБОТАЮ ================= -->
-    <section class="services" id="services">
-      <img class="blob blob--gray-left" src="img/blob-gray-left.png" alt="" aria-hidden="true">
-      <img class="blob blob--green-tube" src="img/blob-green-tube.png" alt="" aria-hidden="true">
+    <section class="services screen" id="services">
+      <img class="blob blob--gray-left" src="img/blob-hero-green.svg" alt="" aria-hidden="true">
+      <img class="blob blob--green-tube" src="img/blob-hero-green.svg" alt="" aria-hidden="true">
 
       <h2 class="section-title services__title">С какими запросами я работаю</h2>
 
@@ -107,7 +109,7 @@
           <!-- ТЕСТОВЫЕ карточки 4 и 5: используют уже имеющиеся фото.
                Замените src и текст на свои, когда будут готовы. -->
           <article class="card">
-            <img class="card__img" src="img/card-4.jpg" alt="Гидрокинезиология для детей" draggable="false">
+            <img class="card__img" src="img/massage-timur-2.jpg" alt="Гидрокинезиология для детей" draggable="false">
             <h3 class="card__label">Гидрокинезиология<br>для детей<br>и подростков</h3>
           </article>
 
@@ -131,10 +133,7 @@
     </section>
 
     <!-- ================= ПАТОЛОГИЯ НОВОРОЖДЁННЫХ ================= -->
-    <section class="about" id="about" style="
-    padding-bottom: 5%;
-    padding-top: 5%;
-">
+    <section class="about screen" id="about">
       <div class="about__content">
         <p class="about__tag">профессиональное направление</p>
         <h2 class="about__title">Патология новорождённых</h2>
@@ -158,10 +157,7 @@
     </section>
 
     <!-- ================= БЛОК 03: КАК СТРОИТСЯ РЕАБИЛИТАЦИЯ ================= -->
-    <section class="rehab" id="rehab" style="
-    padding-top: 5%;
-    padding-bottom: 5%;
-">
+    <section class="rehab screen" id="rehab">
       <div class="rehab__intro">
         <p class="eyebrow">индивидуальный подход</p>
         <h2 class="section-title rehab__title">Каждый этап развития имеет значение</h2>
@@ -178,12 +174,13 @@
     </section>
 
     <!-- ================= БЛОК 04: СИТУАЦИИ ДЛЯ ОБРАЩЕНИЯ ================= -->
-    <section class="situations" id="situations">
+    <section class="situations screen" id="situations">
       <div class="situations__header">
         <p class="eyebrow">когда стоит обратиться</p>
         <h2 class="section-title situations__title">Подход, который учитывает ваши потребности</h2>
         <p class="situations__lead">Выберите, для кого вы ищете помощь, чтобы ознакомиться с основными направлениями работы.</p>
-        <div class="audience-switch" role="tablist" aria-label="Выберите аудиторию">
+        <div class="audience-switch" role="tablist" aria-label="Выберите аудиторию" data-active="children">
+          <span class="audience-switch__thumb" aria-hidden="true"></span>
           <button class="audience-switch__button is-active" type="button" role="tab" id="tab-children" aria-selected="true" aria-controls="situation-content" data-audience="children">Дети</button>
           <button class="audience-switch__button" type="button" role="tab" id="tab-adults" aria-selected="false" aria-controls="situation-content" data-audience="adults">Взрослые</button>
         </div>
@@ -199,25 +196,82 @@
             <article class="situation-item"><span>04</span><div><h4>Дополнительные методы реабилитации</h4><p>Лечебный массаж и гидрокинезиология рассматриваются как элементы программы, если подходят ребёнку по возрасту и состоянию.</p></div></article>
           </div>
           <p class="situations__note">Карточки описывают поводы для консультации, а не устанавливают диагноз. Методы выбираются индивидуально после оценки состояния и противопоказаний.</p>
-          <a class="btn btn--gray situations__cta" href="#contacts">Обсудить консультацию</a>
+          <button class="btn btn--primary situations__cta" type="button" data-open-modal="consult-modal" data-request="consult">Обсудить консультацию</button>
         </div>
         <div class="situations__photo-wrap">
-         
+          <img class="situations__photo" src="img/massage-timur-2.jpg" alt="Специалист проводит реабилитационное занятие">
           <span class="badge situations-badge situations-badge--top">Оценка развития</span>
           <span class="badge situations-badge situations-badge--bottom">Индивидуальная программа</span>
         </div>
       </div>
     </section>
 
-    <!-- ================= КОНТАКТЫ (нижний блок с графикой) ================= -->
-    <section class="contacts" id="contacts">
-      <img class="blob blob--gray-bottom" src="img/blob-gray-bottom.png" alt="" aria-hidden="true">
-      <!-- В макете этот блок содержит только графику.
-           Сюда можно добавить телефон, мессенджеры и форму записи. -->
+    <!-- ================= ДОКУМЕНТЫ И КВАЛИФИКАЦИЯ ================= -->
+    <section class="documents screen" id="documents">
+      <div class="section-heading">
+        <p class="eyebrow">образование и квалификация</p>
+        <h2 class="section-title">Документы и сертификаты</h2>
+        <p>Дипломы, документы об образовании и сертификаты о дополнительном обучении помогают ознакомиться с профессиональной подготовкой специалиста.</p>
+      </div>
+      <div class="documents__grid">
+        <article class="document-card"><div class="document-card__icon" aria-hidden="true">01</div><div><h3>Диплом о высшем медицинском образовании</h3><p>Добавьте скан или фотографию документа.</p></div><span class="document-card__status">Документ будет добавлен</span></article>
+        <article class="document-card"><div class="document-card__icon" aria-hidden="true">02</div><div><h3>Документы о профессиональной подготовке</h3><p>Сертификаты специалиста и документы о повышении квалификации.</p></div><span class="document-card__status">Документы будут добавлены</span></article>
+        <article class="document-card"><div class="document-card__icon" aria-hidden="true">03</div><div><h3>Дополнительные сертификаты</h3><p>Обучение по реабилитации, ЛФК, массажу и другим направлениям.</p></div><span class="document-card__status">Документы будут добавлены</span></article>
+      </div>
+      <p class="documents__note">Перед публикацией разместите только действительные документы и проверьте, какие персональные данные допустимо показывать публично.</p>
     </section>
+
+    <!-- ================= ОТЗЫВЫ ================= -->
+    <section class="reviews screen" id="reviews">
+      <div class="reviews__intro">
+        <p class="eyebrow">обратная связь</p>
+        <h2 class="section-title">Отзывы</h2>
+        <p>Здесь можно ознакомиться с впечатлениями пациентов и родителей после взаимодействия со специалистом.</p>
+      </div>
+      <div class="reviews__empty"><span class="reviews__mark" aria-hidden="true">“</span><h3>Ваш отзыв может помочь другим</h3><p>Пока отзывы не опубликованы. Если вы уже обращались за консультацией, поделитесь своим опытом. Перед публикацией отзыв проверяется на наличие персональных и медицинских данных.</p><button type="button" class="btn btn--primary" data-open-modal="review-modal">Оставить отзыв</button></div>
+    </section>
+
+    <!-- ================= КОНТАКТЫ И ФУТЕР ================= -->
+    <footer class="footer" id="contacts">
+      <div class="footer__main"><div class="footer__brand"><a href="#top" class="footer__logo">Иван Бочкарёв</a><p>Врач-реабилитолог<br>Индивидуальный подход к реабилитации детей и взрослых</p></div>
+        <div class="footer__contact"><h2>Связаться со специалистом</h2><p>Для первичного обращения опишите ситуацию и укажите, для кого нужна консультация. Это поможет сориентироваться по дальнейшим шагам.</p><button type="button" class="btn btn--white" data-open-modal="consult-modal">Обсудить консультацию</button></div>
+        <div class="footer__links"><h3>Контакты</h3><a href="tel:+79990000000" data-contact-placeholder="phone">+7 (999) 000-00-00</a><a href="https://t.me/your_username" target="_blank" rel="noopener noreferrer" data-contact-placeholder="telegram">Telegram</a><a href="https://max.ru/" target="_blank" rel="noopener noreferrer" data-contact-placeholder="max">MAX</a><a href="https://instagram.com/your_username" target="_blank" rel="noopener noreferrer" data-contact-placeholder="instagram">Instagram</a><p class="footer__hint">Контактные ссылки нужно заменить на актуальные перед публикацией.</p></div>
+      </div>
+      <div class="footer__bottom"><span>© <span id="current-year">2026</span> Иван Бочкарёв</span><span>Информация на сайте не заменяет очную консультацию врача.</span></div>
+    </footer>
 
   </main>
 
+
+  <!-- Модальное окно консультации / записи -->
+  <div class="modal" id="consult-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="consult-modal-title">
+    <div class="modal__backdrop" data-close-modal></div><div class="modal__panel" role="document"><button class="modal__close" type="button" aria-label="Закрыть окно" data-close-modal>×</button>
+      <p class="eyebrow">первичное обращение</p><h2 id="consult-modal-title">Обсудить консультацию</h2><p class="modal__lead">Опишите ситуацию — сообщение откроется в выбранном мессенджере. Не отправляйте через сайт документы с избыточными персональными данными.</p>
+      <form id="consult-form" class="modal-form">
+        <label>Для кого нужна консультация?<select name="audience" required><option value="" selected disabled>Выберите вариант</option><option>Для ребёнка</option><option>Для взрослого</option></select></label>
+        <div class="modal-form__row"><label>Возраст<input name="age" type="text" placeholder="Например, 8 месяцев или 35 лет" required></label><label>Как к вам обращаться<input name="name" type="text" placeholder="Ваше имя" required></label></div>
+        <label>Ситуация и цель обращения<textarea name="message" rows="4" required placeholder="Кратко опишите, что беспокоит, какая задача стоит и какая информация уже есть: диагноз или заключение врача, особенности развития, рекомендации специалистов. Для ребёнка укажите возраст; для взрослого — возраст и цель реабилитации."></textarea></label>
+        <label>Дополнительная информация (необязательно)<textarea name="details" rows="2" placeholder="Например, какие методы уже пробовали или какие вопросы хотите обсудить"></textarea></label>
+        <p class="modal-form__privacy">Не указывайте паспортные данные и не прикладывайте медицинские документы в открытом сообщении. При необходимости специалист подскажет безопасный способ передачи информации.</p>
+        <div class="modal__actions"><button class="btn btn--primary" type="submit">Подготовить сообщение</button></div>
+      </form>
+      <div class="modal__messengers"><a class="btn btn--outline" href="https://t.me/your_username" target="_blank" rel="noopener noreferrer" data-contact-placeholder="telegram">Telegram</a><a class="btn btn--outline" href="https://max.ru/" target="_blank" rel="noopener noreferrer" data-contact-placeholder="max">MAX</a><a class="btn btn--outline" href="https://instagram.com/your_username" target="_blank" rel="noopener noreferrer" data-contact-placeholder="instagram">Instagram</a><a class="btn btn--outline" href="tel:+79990000000" data-contact-placeholder="phone">Позвонить</a></div>
+      <p class="modal__hint">Перед запуском замените демонстрационные контакты в HTML на реальные.</p>
+    </div>
+  </div>
+
+  <!-- Модальное окно отзыва -->
+  <div class="modal" id="review-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="review-modal-title">
+    <div class="modal__backdrop" data-close-modal></div><div class="modal__panel" role="document"><button class="modal__close" type="button" aria-label="Закрыть окно" data-close-modal>×</button>
+      <p class="eyebrow">обратная связь</p><h2 id="review-modal-title">Оставить отзыв</h2><p class="modal__lead">Расскажите о своём опыте без фамилий, диагнозов и других персональных данных. Отзыв будет подготовлен для отправки на проверку, но не опубликуется автоматически.</p>
+      <form id="review-form" class="modal-form"><label>Как к вам обращаться?<input name="reviewer" type="text" placeholder="Имя или инициалы" required></label><label>К кому относится обращение?<select name="reviewAudience" required><option value="" selected disabled>Выберите вариант</option><option>Ребёнок</option><option>Взрослый</option></select></label><label>Ваш отзыв<textarea name="reviewText" rows="5" minlength="20" required placeholder="Опишите впечатления от общения и организации работы. Не указывайте диагнозы и личные данные."></textarea></label><label class="modal-form__consent"><input type="checkbox" name="reviewConsent" required><span>Я согласен(на) на передачу текста отзыва для рассмотрения и понимаю, что публикация возможна после проверки.</span></label><button class="btn btn--primary" type="submit">Подготовить отзыв</button></form>
+    </div>
+  </div>
+
+  <!-- Уведомление после отправки форм -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/script.js"></script>
 </body>
 </html>
